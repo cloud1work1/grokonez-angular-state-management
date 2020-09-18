@@ -1,27 +1,75 @@
 # GrokonezNgrx
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.22.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- ## Instal npm install @ngrx/store
+- ## app.module.ts
+  ```
+  StoreModule.forRoot({customers: CustomerReducer})
+  ```
+- ## customer.action.ts
+  ```
+  export enum CustomerAactionTypes {
+    ADD = '[Customer Component] Add',
+    DEL = '[Customer Component] Del
+  }
+  
+  export class AddCustomer implements Action {
+    readonly type = CustomerActionTypes.Add;
+    constructor(public payload: Customer) {}
+  }
+  
+  export class DelCustomer implements Action {
+    readonly type = CustomerActionTypes.DEL;
+    constructor(public id: number) {}
+  }
+  
+  export type Actions = AddCustomer | DelCustomer;
+  ```
+- ## customer.reducer.ts
+  ```
+  const initialState: Customer = {};
+  export function CustomerReducer(state: Customer[] = [initialState], action: Actions) {
+    switch(action.type) {
+    
+      case(CustomerActionTypes.ADD): 
+      return [...state, action.payload];
+      case(CustomerActionTypes.DEL):
+       return state.filter(({id})) => id !== action.payload);
+      default:
+        return state;
+    }
+  
+  }
+  ```
+ - ## Interface
+   ```
+   export interface AppState {
+    customers: Customer[];
+   }
+   ```
+ - ## Customer List
+  ```
+  constructor(private store:Store<AppState>) {
+   this.customers = store.select('customers');
+  }
+  ```
+ - ## customer list html
+  ```
+  <div *ngFor="let customer of customers | aync>
+  ```
+- ## add customer
+  ```
+  constructor(private store: Store<AppState>) {}
+  
+  add() {
+    this.store.dispatch(new AddCustomer(this.customer);
+  }
+  ```
+- ## del customer
+  ```
+  constructor(private store: Store<AppState>) {}
+  
+  add() {
+    this.store.dispatch(new DelCustomer(this.customer.id);
+  }
+  ```
+ ## NOTE: the name of key mentioned in **StoreModule.forRoot({key: reducer})**, should be absolutely same in case context as well, while selecting from store, i.e. ** store.select('key')
