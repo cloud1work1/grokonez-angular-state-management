@@ -1,0 +1,10 @@
+<div *ngIf="customer">
+    <div>{{customer.id}}</div>
+    <div>
+        <label>Name:</label> {{customer.name}}
+    </div>
+    <div>
+        <label>Age:</label> {{customer.age}}
+    </div>
+    <span class="btn btn-danger" (click)="delCustomer()">Delete</span>
+</div>
